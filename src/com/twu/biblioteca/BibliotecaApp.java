@@ -6,7 +6,7 @@ public class BibliotecaApp {
 
     private String name;
     private Map<String, Book> books;
-    
+
     public BibliotecaApp(String name) {
         this.name = name;
         this.books = new Hashtable<String, Book>();
@@ -17,8 +17,10 @@ public class BibliotecaApp {
     }
 
     public String mainMenuOptions(){
-        return "Options: \nQuit (Q)" +
-                "\nShow All books (S)\n";
+        return "\nQuit (Q)" +
+                "\nShow All books (S)" +
+                "\nCheck out a book (C)" +
+                "\nReturn a book (R)\n";
     }
 
     public String exitMessage(){
@@ -54,11 +56,11 @@ public class BibliotecaApp {
 
     public Book checkout(String title) throws BookException{
         if (!books.containsKey(title)) {
-            throw new BookException("Book Not Found");
+            throw new BookException("This book is not in our library. Please try again.");
         }
         Book book = books.get(title);
         if (book.isCheckedOut()) {
-            throw new BookException("Book was checked out");
+            throw new BookException("Book is currently checked out!");
         }
         book.setCheckedOut(true);
         return book;
@@ -66,11 +68,11 @@ public class BibliotecaApp {
 
     public Book returnBook(String title) throws BookException {
         if (!books.containsKey(title)) {
-            throw new BookException("Book Not Found");
+            throw new BookException("Incorrect entry, this book was not in our library. Try again.");
         }
         Book book = books.get(title);
         if (!book.isCheckedOut()) {
-            throw new BookException("Book was not checked out");
+            throw new BookException("This book was not checked out.");
         }
         book.setCheckedOut(false);
         return book;
@@ -89,7 +91,9 @@ public class BibliotecaApp {
         System.out.printf("%-30s %-30s %-30s\n", "Title:", "Author:", "Published:");
         for (String title : books.keySet()) {
             Book b = getBook(title);
-            System.out.printf("%-30s %-30s %-30s\n", b.getTitle(), b.getAuthor(), b.getYear());
+            if (b.isCheckedOut() == false){
+                System.out.printf("%-30s %-30s %-30s\n", b.getTitle(), b.getAuthor(), b.getYear());
+            }
         }
     }
 
@@ -125,11 +129,21 @@ public class BibliotecaApp {
             else if (choice.equals("S")) {
                 app.showAllBooks();
             } else if (choice.equals("C")) {
+                System.out.println("Type in the name of the book you wish to check out:");
                 try {
-                    for (int i = 0; i < 2; i++) {
-                        Book book = app.checkout("Unseen Academicals");
-                        System.out.println(book.getTitle());
-                    }
+                    String bookName = sc.nextLine();
+                    Book book = app.checkout(bookName);
+                    System.out.println(book.getTitle() + " has been checked out to you!");
+
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            } else if (choice.equals("R")) {
+                System.out.println("Type in the name of the book you wish to return:");
+                try {
+                    String bookName = sc.nextLine();
+                    Book book = app.returnBook(bookName);
+                    System.out.println(book.getTitle() + " has been returned to the library!\nThank you!");
 
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
