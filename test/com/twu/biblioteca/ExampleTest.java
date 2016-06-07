@@ -4,7 +4,6 @@ package com.twu.biblioteca;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +77,7 @@ public class ExampleTest {
             assertTrue(searchArray(testBooks, book.getTitle()));
             assertTrue(searchArray(testAuthours, book.getAuthor()));
         }
-//        assertEquals(b.showAllBooks(), );
+
     }
 
     @Test
@@ -126,25 +125,5 @@ public class ExampleTest {
         } catch (Exception e) {
             Assert.assertEquals(e.getMessage(), "Book Not Found");
         }
-
     }
-
-
-//    @Test
-//    public void testShowAllBooks() {
-//        BibliotecaApp b = new BibliotecaApp("Main App");
-//        books = new Hashtable<String, Book>();
-//        String[] testBooks = {"Alice in wonderland", "Harry Potter", "Whatever"};
-//        String[] testAuthours = {"Whoever", "That person", "Whatever Too"};
-//        for (int i = 0; i < testBooks.length; i++) {
-//            Book book = new Book(testBooks[i], testAuthours[i]);
-//            b.addBook(book);
-//        }
-//        System.out.printf("%-30s %-30s %-30s\n", "Title:", "Author:", "Published:");
-//        for (String title : books.keySet()) {
-//            Book a = b.getBook(title);
-//            System.out.printf("%-30s %-30s %-30s\n", a.getTitle(), a.getAuthor(), a.getYear());
-//        }
-////        assertEquals(b.showAllBooks(), );
-//    }
 }
