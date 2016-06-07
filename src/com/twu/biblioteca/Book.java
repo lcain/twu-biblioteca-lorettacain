@@ -10,10 +10,20 @@ public class Book {
     private String title;
     private String Author;
     private int year;
+    private boolean checkedOut;
+
+    public boolean isCheckedOut() {
+        return checkedOut;
+    }
+
+    public void setCheckedOut(boolean checkedOut) {
+        this.checkedOut = checkedOut;
+    }
 
     public Book(String title, String author) {
         this.title = title;
         Author = author;
+        checkedOut = false;
     }
 
     public String getTitle() {
