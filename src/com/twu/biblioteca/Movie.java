@@ -1,14 +1,14 @@
 package com.twu.biblioteca;
 
-
 /**
- * Created by lorettacain on 6/06/2016.
+ * Created by lorettacain on 8/06/2016.
  */
-public class Book {
+public class Movie {
 
     private String title;
-    private String Author;
+    private String director;
     private int year;
+    private int rating;
     private boolean checkedOut;
 
     public boolean isCheckedOut() {
@@ -19,9 +19,9 @@ public class Book {
         this.checkedOut = checkedOut;
     }
 
-    public Book(String title, String author) {
+    public Movie(String title, String directorName) {
         this.title = title;
-        Author = author;
+        director = directorName;
         checkedOut = false;
     }
 
@@ -34,12 +34,12 @@ public class Book {
         this.title = title;
     }
 
-    public String getAuthor() {
-        return Author;
+    public String getDirector() {
+        return director;
     }
 
-    public void setAuthor(String author) {
-        Author = author;
+    public void setDirector(String directorName) {
+        director = directorName;
     }
 
     public int getYear() {
@@ -49,4 +49,14 @@ public class Book {
     public void setYear(int year) {
         this.year = year;
     }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 }
+
+//name, year, director and movie rating

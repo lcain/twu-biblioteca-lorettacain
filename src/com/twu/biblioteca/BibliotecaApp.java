@@ -4,118 +4,26 @@ import java.util.*;
 
 public class BibliotecaApp {
 
-    private String name;
-    private Map<String, Book> books;
-
-    public BibliotecaApp(String name) {
-        this.name = name;
-        this.books = new Hashtable<String, Book>();
-    }
-
-    public String welcomeMessage(){
-        return "Welcome to Biblioteca App Please choose an option: ";
-    }
-
-    public String mainMenuOptions(){
-        return "\nQuit (Q)" +
-                "\nShow All books (S)" +
-                "\nCheck out a book (C)" +
-                "\nReturn a book (R)\n";
-    }
-
-    public String exitMessage(){
-        return "Thank you for using Biblioteca! Goodbye!";
-    }
-
-    public String selectAValidOption(){
-        return "Please select a valid option!";
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Map getBooks() {
-        return books;
-    }
-
-    public void addBook(Book book) {
-
-        books.put(book.getTitle(), book);
-    }
-
-    public boolean hasBook(String bookname) {
-
-        return books.containsKey(bookname);
-    }
-
-    public Book getBook(String bookName) {
-
-        return books.get(bookName);
-    }
-
-    public Book checkout(String title) throws BookException{
-        if (!books.containsKey(title)) {
-            throw new BookException("This book is not in our library. Please try again.");
-        }
-        Book book = books.get(title);
-        if (book.isCheckedOut()) {
-            throw new BookException("Book is currently checked out!");
-        }
-        book.setCheckedOut(true);
-        return book;
-    }
-
-    public Book returnBook(String title) throws BookException {
-        if (!books.containsKey(title)) {
-            throw new BookException("Incorrect entry, this book was not in our library. Try again.");
-        }
-        Book book = books.get(title);
-        if (!book.isCheckedOut()) {
-            throw new BookException("This book was not checked out.");
-        }
-        book.setCheckedOut(false);
-        return book;
-    }
-
-    public List<Book> getAllBooks() {
-        List<Book> bookList = new ArrayList<Book>();
-        for (String title : books.keySet()) {
-            Book b = getBook(title);
-            bookList.add(b);
-        }
-        return bookList;
-    }
-
-    public void showAllBooks() {
-        System.out.printf("%-30s %-30s %-30s\n", "Title:", "Author:", "Published:");
-        for (String title : books.keySet()) {
-            Book b = getBook(title);
-            if (b.isCheckedOut() == false){
-                System.out.printf("%-30s %-30s %-30s\n", b.getTitle(), b.getAuthor(), b.getYear());
-            }
-        }
-    }
-
-    public Book createBooks(String bookName, String authorName, int year){
-        Book b = new Book(bookName, authorName);
-        b.setYear(year);
-        addBook(b);
-        return b;
-    }
-
     public static void main(String[] args) {
-        BibliotecaApp app = new BibliotecaApp("Main App");
+        BibliotecaOptions app = new BibliotecaOptions("Main Options");
 
-        app.createBooks("Harry Potter", "J.K. Rowling",1997);
-        app.createBooks("The Hobbit", "J.R.R. Tolkien", 1937);
-        app.createBooks("The Hunger Games", "Suzanne Collins", 2008);
-        app.createBooks("The Little Prince", "Antoine de Saint-Exupery", 1943);
-        app.createBooks("American Gods", "Neil Gaiman", 2001);
-        app.createBooks("The Wee Free Men", "Terry Pratchett", 2003);
-        app.createBooks("Reaper Man", "Terry Pratchett", 1991);
-        app.createBooks("Small Gods", "Terry Pratchett", 1992);
-        app.createBooks("Unseen Academicals", "Terry Pratchett", 2009);
+        app.createBook("Harry Potter", "J.K. Rowling",1997);
+        app.createBook("The Hobbit", "J.R.R. Tolkien", 1937);
+        app.createBook("The Hunger Games", "Suzanne Collins", 2008);
+        app.createBook("The Little Prince", "Antoine de Saint-Exupery", 1943);
+        app.createBook("American Gods", "Neil Gaiman", 2001);
+        app.createBook("The Wee Free Men", "Terry Pratchett", 2003);
+        app.createBook("Reaper Man", "Terry Pratchett", 1991);
+        app.createBook("Small Gods", "Terry Pratchett", 1992);
+        app.createBook("Unseen Academicals", "Terry Pratchett", 2009);
+
+        app.createMovie("The Matrix", "Lilly & Lana Wachowski", 1999, 9);
+        app.createMovie("Gladiator", "Ridley Scott", 2000, 9);
+        app.createMovie("Totoro", "Hayao Miyazaki", 1988, 10);
+        app.createMovie("The Jungle Book", "Jon Favreau", 2016, 5);
+        app.createMovie("Fight Club", "David Fincher", 1999, 8);
+        app.createMovie("Joy", "David O. Russell", 2015, 8);
+
 
         System.out.println(app.welcomeMessage());
         System.out.print(app.mainMenuOptions());
@@ -126,9 +34,9 @@ public class BibliotecaApp {
         while(!choice.equals("Q")) {
             if (choice.equals(""))
                 choice = sc.nextLine().trim();
-            else if (choice.equals("S")) {
+            else if (choice.equals("A")) {
                 app.showAllBooks();
-            } else if (choice.equals("C")) {
+            } else if (choice.equals("B")) {
                 System.out.println("Type in the name of the book you wish to check out:");
                 try {
                     String bookName = sc.nextLine();
@@ -138,12 +46,34 @@ public class BibliotecaApp {
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
-            } else if (choice.equals("R")) {
+            } else if (choice.equals("C")) {
                 System.out.println("Type in the name of the book you wish to return:");
                 try {
                     String bookName = sc.nextLine();
                     Book book = app.returnBook(bookName);
                     System.out.println(book.getTitle() + " has been returned to the library!\nThank you!");
+
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }  else if (choice.equals("D")) {
+                app.showAllMovies();
+            } else if (choice.equals("E")) {
+                System.out.println("Type in the name of the movie you wish to check out:");
+                try {
+                    String movieName = sc.nextLine();
+                    Movie movie = app.checkoutMovie(movieName);
+                    System.out.println(movie.getTitle() + " has been checked out to you!");
+
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            } else if (choice.equals("F")) {
+                System.out.println("Type in the name of the movie you wish to return:");
+                try {
+                    String movieName = sc.nextLine();
+                    Movie movie = app.returnMovie(movieName);
+                    System.out.println(movie.getTitle() + " has been returned to the library!\nThank you!");
 
                 } catch (Exception e) {
                     System.out.println(e.getMessage());

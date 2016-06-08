@@ -14,22 +14,23 @@ import static org.junit.Assert.assertTrue;
 public class ExampleTest {
     private String name;
     private Map<String, Book> books;
+    private Map<String, Movie> movies;
 
     @Test
     public void testWelcomeMessage() {
-        BibliotecaApp a = new BibliotecaApp("My Library");
+        BibliotecaOptions a = new BibliotecaOptions("My Library");
         assertEquals(a.welcomeMessage(), "Welcome to Biblioteca App Please choose an option: ");
     }
 
     @Test
     public void testName() {
-        BibliotecaApp a = new BibliotecaApp("My Library");
+        BibliotecaOptions a = new BibliotecaOptions("My Library");
         assertEquals(a.getName(), "My Library");
     }
 
     @Test
     public void testAddingBooks() {
-        BibliotecaApp b = new BibliotecaApp("Main App");
+        BibliotecaOptions b = new BibliotecaOptions("Main App");
         String[] testBooks = {"Alice in wonderland", "Harry Potter", "Whatever"};
         String[] testAuthours = {"Whoever", "That person", "Whatever Too"};
         for (int i = 0; i < testBooks.length; i++) {
@@ -62,7 +63,7 @@ public class ExampleTest {
 
     @Test
     public void testShowAllBooks() {
-        BibliotecaApp b = new BibliotecaApp("Main App");
+        BibliotecaOptions b = new BibliotecaOptions("Main App");
         String[] testBooks = {"Alice in wonderland", "Harry Potter", "Whatever"};
         String[] testAuthours = {"Whoever", "That person", "Whatever Too"};
         for (int i = 0; i < testBooks.length; i++) {
@@ -81,9 +82,9 @@ public class ExampleTest {
     }
 
     @Test
-    public void testCheckOut() {
-        BibliotecaApp b = new BibliotecaApp("Main App");
-        b.createBooks("Test Book", "Test Author", 2001);
+    public void testCheckOutBook() {
+        BibliotecaOptions b = new BibliotecaOptions("Main App");
+        b.createBook("Test Book", "Test Author", 2001);
         try {
             Book book = b.checkout("Test Book");
             Assert.assertNotNull(book);
@@ -94,20 +95,20 @@ public class ExampleTest {
         try {
             Book book = b.checkout("Test Book");
         } catch (BookException e) {
-            Assert.assertEquals(e.getMessage(), "Book was checked out");
+            Assert.assertEquals(e.getMessage(), "Book is currently checked out!");
         }
         try {
             Book book = b.checkout("Non Existent Book");
         } catch (BookException e) {
-            Assert.assertEquals(e.getMessage(), "Book Not Found");
+            Assert.assertEquals(e.getMessage(), "This book is not in our library. Please try again.");
         }
 
     }
 
     @Test
     public void testReturnedBook() {
-        BibliotecaApp b = new BibliotecaApp("Main App");
-        b.createBooks("Test Book", "Test Author", 2001);
+        BibliotecaOptions b = new BibliotecaOptions("Main App");
+        b.createBook("Test Book", "Test Author", 2001);
         try {
             b.checkout("Test Book");
             Book book = b.returnBook("Test Book");
@@ -118,12 +119,79 @@ public class ExampleTest {
         try {
             Book book = b.returnBook("Test Book");
         } catch (Exception e) {
-            Assert.assertEquals(e.getMessage(), "Book was not checked out");
+            Assert.assertEquals(e.getMessage(), "This book was not checked out.");
         }
         try {
             Book book = b.returnBook("Non Existent Book");
         } catch (Exception e) {
-            Assert.assertEquals(e.getMessage(), "Book Not Found");
+            Assert.assertEquals(e.getMessage(), "Incorrect entry, this book was not in our library. Try again.");
+        }
+    }
+
+    @Test
+    public void testShowAllMovies() {
+        BibliotecaOptions b = new BibliotecaOptions("Main App");
+        String[] testMovies = {"Alice in wonderland", "Harry Potter", "Whatever"};
+        String[] testDirectors = {"Whoever", "That person", "Whatever Too"};
+        for (int i = 0; i < testMovies.length; i++) {
+            Movie movie = new Movie(testMovies[i], testDirectors[i]);
+            b.addMovie(movie);
+        }
+        List<Movie> movieList = b.getAllMovies();
+        Assert.assertEquals(movieList.size(), 3);
+        int i = 0;
+        for (Iterator<Movie> iterator = movieList.iterator(); iterator.hasNext(); ) {
+            Movie movie = iterator.next();
+            assertTrue(searchArray(testMovies, movie.getTitle()));
+            assertTrue(searchArray(testDirectors, movie.getDirector()));
+        }
+
+    }
+
+    @Test
+    public void testCheckOutMovie() {
+        BibliotecaOptions b = new BibliotecaOptions("Main App");
+        b.createMovie("Test Movie", "Test Director", 2001, 10);
+        try {
+            Movie movie = b.checkoutMovie("Test Movie");
+            Assert.assertNotNull(movie);
+            Assert.assertTrue(movie.isCheckedOut());
+        } catch (BookException e) {
+
+        }
+        try {
+            Movie movie = b.checkoutMovie("Test Movie");
+        } catch (BookException e) {
+            Assert.assertEquals(e.getMessage(), "This movie is currently checked out!");
+        }
+        try {
+            Movie movie = b.checkoutMovie("Non Existent Movie");
+        } catch (BookException e) {
+            Assert.assertEquals(e.getMessage(), "This movie is not in our library. Please try again.");
+        }
+
+    }
+
+    @Test
+    public void testReturnedMovie() {
+        BibliotecaOptions b = new BibliotecaOptions("Main App");
+        b.createMovie("Test Movie", "Test Director", 2001, 10);
+        try {
+            b.checkoutMovie("Test Movie");
+            Movie movie = b.returnMovie("Test Movie");
+            Assert.assertFalse(movie.isCheckedOut());
+        } catch (Exception e) {
+
+        }
+        try {
+            Movie movie = b.returnMovie("Test Movie");
+        } catch (Exception e) {
+            Assert.assertEquals(e.getMessage(), "This movie was not checked out.");
+        }
+        try {
+            Movie movie = b.returnMovie("Non Existent Movie");
+        } catch (Exception e) {
+            Assert.assertEquals(e.getMessage(), "Incorrect entry, this movie was not in our library. Try again.");
         }
     }
 }
