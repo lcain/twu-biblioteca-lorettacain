@@ -105,9 +105,20 @@ public class ExampleTest {
     }
 
     @Test
-    public void testAddingMovies(){
-        Movie movie = new Movie("The Matrix", "Lilly & Lana Wachowski");
-        assertNotNull(movie);
+    public void testAddingMovies() {
+        BibliotecaOptions b = new BibliotecaOptions("Main App");
+        String[] testMovieTitles = {"Alice in wonderland", "Harry Potter", "Whatever"};
+        String[] testDirectors = {"Whoever", "That person", "Whatever Too"};
+        for (int i = 0; i < testMovieTitles.length; i++) {
+            Movie movie = new Movie(testMovieTitles[i], testDirectors[i]);
+            b.addMovie(movie);
+            assertNotNull(movie);
+        }
+
+        for (int i = 0; i < testMovieTitles.length; i++) {
+            Assert.assertTrue(b.hasMovie(testMovieTitles[i]));
+            Assert.assertEquals(b.getMovie(testMovieTitles[i]).getDirector(), testDirectors[i]);
+        }
     }
 
     @Test
@@ -204,9 +215,23 @@ public class ExampleTest {
     }
 
     @Test
-    public void testCreateNewUser() {
-        User user = new User("555-5555", "Loretta Cain", "password", "0424242424", "testing@gmail.com");
-        assertNotNull(user);
+    public void testCreateNewUsers() {
+
+        BibliotecaOptions b = new BibliotecaOptions("Main App");
+        String[] testLibraryNumber = {"111-1111", "222-2222", "333-3333"};
+        String[] testUserName = {"Whoever", "That person", "Whatever Too"};
+        String[] testPassword = {"password", "passwording", "passwordz"};
+        String[] testPhoneNumber = {"0404040404", "0404040404", "0404040404"};
+        String[] testEmailAddress = {"testing@testing.com", "testing@thetest.com", "thetest@testing.testing"};
+        for (int i = 0; i < testLibraryNumber.length; i++) {
+            User user = new User(testLibraryNumber[i], testUserName[i], testPassword[i], testPhoneNumber[i], testEmailAddress[i]);
+            b.addUser(user);
+            assertNotNull(user);
+        }
+
+        for (int i = 0; i < testLibraryNumber.length; i++) {
+            Assert.assertEquals(b.getPassword(testLibraryNumber[i]), testPassword[i]);
+        }
     }
 
 }
