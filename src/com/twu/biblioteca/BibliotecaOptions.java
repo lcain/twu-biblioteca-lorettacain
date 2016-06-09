@@ -10,15 +10,21 @@ public class BibliotecaOptions {
     private String name;
     private Map<String, Book> books;
     private Map<String, Movie> movies;
+    private Map<String, User> users;
 
     public BibliotecaOptions(String name) {
         this.name = name;
         this.books = new Hashtable<String, Book>();
         this.movies = new Hashtable<String, Movie>();
+        this.users = new Hashtable<String, User>();
     }
 
     public String welcomeMessage(){
-        return "Welcome to Biblioteca App Please choose an option: ";
+        return "Welcome to Biblioteca App!\nPlease log in to proceed. \nEnter your library number:";
+    }
+
+    public String loginMessage(){
+        return "Please log in to proceed. \n Enter your library number:";
     }
 
     public String mainMenuOptions(){
@@ -28,6 +34,7 @@ public class BibliotecaOptions {
                 "\nShow all movies (D)" +
                 "\nCheck out a movie (E)" +
                 "\nReturn a movie (F)" +
+                "\nView user details (G)" +
                 "\nQuit (Q)\n";
     }
 
@@ -62,7 +69,7 @@ public class BibliotecaOptions {
         return books.get(bookName);
     }
 
-    public Book checkout(String title) throws BookException{
+    public Book checkout(String title, String libraryNumber) throws BookException{
         if (!books.containsKey(title)) {
             throw new BookException("This book is not in our library. Please try again.");
         }
@@ -71,10 +78,11 @@ public class BibliotecaOptions {
             throw new BookException("Book is currently checked out!");
         }
         book.setCheckedOut(true);
+        book.setBorrowedBy(libraryNumber);
         return book;
     }
 
-    public Book returnBook(String title) throws BookException {
+    public Book returnBook(String title, String libraryNumber) throws BookException {
         if (!books.containsKey(title)) {
             throw new BookException("Incorrect entry, this book was not in our library. Try again.");
         }
@@ -83,6 +91,7 @@ public class BibliotecaOptions {
             throw new BookException("This book was not checked out.");
         }
         book.setCheckedOut(false);
+        book.setBorrowedBy("");
         return book;
     }
 
@@ -131,7 +140,7 @@ public class BibliotecaOptions {
         return movies.get(movieName);
     }
 
-    public Movie checkoutMovie(String title) throws BookException{
+    public Movie checkoutMovie(String title, String libraryNumber) throws BookException{
         if (!movies.containsKey(title)) {
             throw new BookException("This movie is not in our library. Please try again.");
         }
@@ -140,10 +149,11 @@ public class BibliotecaOptions {
             throw new BookException("This movie is currently checked out!");
         }
         movie.setCheckedOut(true);
+        movie.setBorrowedBy(libraryNumber);
         return movie;
     }
 
-    public Movie returnMovie(String title) throws BookException {
+    public Movie returnMovie(String title, String LibraryNumber) throws BookException {
         if (!movies.containsKey(title)) {
             throw new BookException("Incorrect entry, this movie was not in our library. Try again.");
         }
@@ -152,6 +162,7 @@ public class BibliotecaOptions {
             throw new BookException("This movie was not checked out.");
         }
         movie.setCheckedOut(false);
+        movie.setBorrowedBy("");
         return movie;
     }
 
@@ -181,4 +192,30 @@ public class BibliotecaOptions {
         addMovie(m);
         return m;
     }
+
+    public void addUser(User user) {
+
+        users.put(user.getLibraryNumber(), user);
+    }
+
+    public User createUser(String libraryNumber, String userName, String password, String phoneNumber, String emailAddress){
+        User u = new User(libraryNumber, userName, password, phoneNumber, emailAddress);
+        addUser(u);
+        return u;
+    }
+
+    public User getUser(String libraryNumber) {
+        return users.get(libraryNumber);
+    }
+
+    public String getPassword(String libraryNumber){
+        User u = getUser(libraryNumber);
+        return u.getPassword();
+    }
+
+    public void showUserDetail(String libraryNumber){
+        User u = getUser(libraryNumber);
+        System.out.println(u.getUserName() + " " + u.getEmailAddress() + " " + u.getPhoneNumber());
+    }
+
 }

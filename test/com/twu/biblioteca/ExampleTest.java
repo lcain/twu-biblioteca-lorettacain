@@ -6,20 +6,17 @@ import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class ExampleTest {
-    private String name;
-    private Map<String, Book> books;
-    private Map<String, Movie> movies;
 
     @Test
     public void testWelcomeMessage() {
         BibliotecaOptions a = new BibliotecaOptions("My Library");
-        assertEquals(a.welcomeMessage(), "Welcome to Biblioteca App Please choose an option: ");
+        assertEquals(a.welcomeMessage(), "Welcome to Biblioteca App!\nPlease log in to proceed. \nEnter your library number:");
     }
 
     @Test
@@ -85,20 +82,22 @@ public class ExampleTest {
     public void testCheckOutBook() {
         BibliotecaOptions b = new BibliotecaOptions("Main App");
         b.createBook("Test Book", "Test Author", 2001);
+        b.createUser("555-5555", "Loretta Cain", "password", "0424242424", "testing@gmail.com");
         try {
-            Book book = b.checkout("Test Book");
+            Book book = b.checkout("Test Book", "555-5555");
             Assert.assertNotNull(book);
             Assert.assertTrue(book.isCheckedOut());
+            Assert.assertEquals("555-5555", book.getBorrowedBy());
         } catch (BookException e) {
 
         }
         try {
-            Book book = b.checkout("Test Book");
+            Book book = b.checkout("Test Book", "555-5555");
         } catch (BookException e) {
             Assert.assertEquals(e.getMessage(), "Book is currently checked out!");
         }
         try {
-            Book book = b.checkout("Non Existent Book");
+            Book book = b.checkout("Non Existent Book", "555-5555");
         } catch (BookException e) {
             Assert.assertEquals(e.getMessage(), "This book is not in our library. Please try again.");
         }
@@ -106,23 +105,30 @@ public class ExampleTest {
     }
 
     @Test
+    public void testAddingMovies(){
+        Movie movie = new Movie("The Matrix", "Lilly & Lana Wachowski");
+        assertNotNull(movie);
+    }
+
+    @Test
     public void testReturnedBook() {
         BibliotecaOptions b = new BibliotecaOptions("Main App");
         b.createBook("Test Book", "Test Author", 2001);
         try {
-            b.checkout("Test Book");
-            Book book = b.returnBook("Test Book");
+            b.checkout("Test Book", "555-5555");
+            Book book = b.returnBook("Test Book", "555-5555");
             Assert.assertFalse(book.isCheckedOut());
+            Assert.assertEquals("", book.getBorrowedBy());
         } catch (Exception e) {
 
         }
         try {
-            Book book = b.returnBook("Test Book");
+            Book book = b.returnBook("Test Book", "555-5555");
         } catch (Exception e) {
             Assert.assertEquals(e.getMessage(), "This book was not checked out.");
         }
         try {
-            Book book = b.returnBook("Non Existent Book");
+            Book book = b.returnBook("Non Existent Book", "555-5555");
         } catch (Exception e) {
             Assert.assertEquals(e.getMessage(), "Incorrect entry, this book was not in our library. Try again.");
         }
@@ -153,19 +159,20 @@ public class ExampleTest {
         BibliotecaOptions b = new BibliotecaOptions("Main App");
         b.createMovie("Test Movie", "Test Director", 2001, 10);
         try {
-            Movie movie = b.checkoutMovie("Test Movie");
+            Movie movie = b.checkoutMovie("Test Movie", "555-5555");
             Assert.assertNotNull(movie);
             Assert.assertTrue(movie.isCheckedOut());
+            Assert.assertEquals("555-5555", movie.getBorrowedBy());
         } catch (BookException e) {
 
         }
         try {
-            Movie movie = b.checkoutMovie("Test Movie");
+            Movie movie = b.checkoutMovie("Test Movie", "555-5555");
         } catch (BookException e) {
             Assert.assertEquals(e.getMessage(), "This movie is currently checked out!");
         }
         try {
-            Movie movie = b.checkoutMovie("Non Existent Movie");
+            Movie movie = b.checkoutMovie("Non Existent Movie", "555-5555");
         } catch (BookException e) {
             Assert.assertEquals(e.getMessage(), "This movie is not in our library. Please try again.");
         }
@@ -177,21 +184,29 @@ public class ExampleTest {
         BibliotecaOptions b = new BibliotecaOptions("Main App");
         b.createMovie("Test Movie", "Test Director", 2001, 10);
         try {
-            b.checkoutMovie("Test Movie");
-            Movie movie = b.returnMovie("Test Movie");
+            b.checkoutMovie("Test Movie", "555-5555");
+            Movie movie = b.returnMovie("Test Movie", "555-5555");
             Assert.assertFalse(movie.isCheckedOut());
+            Assert.assertEquals("", movie.getBorrowedBy());
         } catch (Exception e) {
 
         }
         try {
-            Movie movie = b.returnMovie("Test Movie");
+            Movie movie = b.returnMovie("Test Movie", "555-5555");
         } catch (Exception e) {
             Assert.assertEquals(e.getMessage(), "This movie was not checked out.");
         }
         try {
-            Movie movie = b.returnMovie("Non Existent Movie");
+            Movie movie = b.returnMovie("Non Existent Movie", "555-5555");
         } catch (Exception e) {
             Assert.assertEquals(e.getMessage(), "Incorrect entry, this movie was not in our library. Try again.");
         }
     }
+
+    @Test
+    public void testCreateNewUser() {
+        User user = new User("555-5555", "Loretta Cain", "password", "0424242424", "testing@gmail.com");
+        assertNotNull(user);
+    }
+
 }

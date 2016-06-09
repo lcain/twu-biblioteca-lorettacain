@@ -10,6 +10,14 @@ public class Book {
     private String Author;
     private int year;
     private boolean checkedOut;
+    private String borrowedBy;
+
+    public void setBorrowedBy(String userID) {
+        borrowedBy = userID;
+    }
+    public String getBorrowedBy(){
+        return borrowedBy;
+    }
 
     public boolean isCheckedOut() {
         return checkedOut;
